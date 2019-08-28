@@ -6,9 +6,9 @@ of phase one is a chatroom with instant p2p dialog, which is deployed to Google
 Cloud Platform with Docker and Kubernetes. The features in future phases
 includes group discussion and chat history.
 
-- [ ] Install NodeJS.
-- [ ] Install Express.
-- [ ] Implement a dialog between two users with server forwarding messages. (No DB)
+- [x] Install NodeJS.
+- [x] Install Express.
+- [x] Implement a dialog between two users with server forwarding messages. (No DB)
 - [ ] Implement React UI to send and receive message.
 - [ ] Install MongoDB.
 - [ ] Implement an account system (login) in MongoDB and NodeJS.
