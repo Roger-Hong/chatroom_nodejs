@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<title>My Express App</title>
+		<script type="text/javascript">
+			var ws = new WebSocket('ws://localhost:3001/chat');
+			ws.onopen = () => {
+		        console.log('websocket is connected ...')
+		        ws.send('connected');
+		    } 
+			ws.onmessage = function(msg) {
+				console.log("Received message: " + msg.data);
+				var newMsg = '<li style="color:green;">' + "Friend:  " + msg.data + "</li>";
+				document.getElementById("history").innerHTML += newMsg;
+			}
+			function send(msg) {
+				console.log("Sent message: " + msg);
+			    ws.send(msg);
+				var newMsg = "\n<li style='color:blue;'>" + "Me:      " + msg + "</li>";
+				document.getElementById("history").innerHTML += newMsg;
+			}
+		</script>
+	</head>
+	<body>
+		<h1>Chat</h1>
+		<strong>I am user <%= userId %></strong>
+		<div id="history"></div>
+		<br>
+		<form name="inputForm" action="javascript:send(textInput.value)">
+			<input type="text" id="textInput"></input>
+			<br>
+      		<input name="Send" type="submit"></input>
+    	</form>
+	</body>
+</html>
