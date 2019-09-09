@@ -1,40 +1,29 @@
-var express = require('express');
-//const { check, oneOf, validationResult } = require('express-validator');
-var bodyParser = require('body-parser');
-var path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const { check, oneOf, validationResult } = require('express-validator');
+const { PORT, MONGODB_PATH } = require('./config');
+const loginHandler = require('./controllers/login');
 
 var app = express();
-var expressWs = require('express-ws')(app);
 
-// View Engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+// Connect to Mongodb
+mongoose.connect(MONGODB_PATH);
+mongoose.connection.once('open', () => {
+	console.log('Connection has been made.');
+}).on('error', (error) => {
+	console.log('Connection error:', error);
+});
 
 // Body Parser Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-// Set static path
-app.use(express.static(path.join(__dirname, 'client')));
+app.use('/user', loginHandler);
 
-var userCount = 0;
-app.get('/', (req, res) => {
-	if (userCount == 2) {
-		res.render('too_many_users');
-		return
-	}
-	res.render('index', {userId: userCount});
-	userCount++;
-});
+app.listen(PORT, () => {
+	console.log(`Server started on port ${PORT}...`);
+})
 
-app.ws('/chat', function(ws, req) {
-  ws.on('message', function(msg) {
-    console.log(msg);
-    setTimeout(() => {ws.send("aaa");}, 1000);
-  });
-  console.log('socket', req.testing);
-});
-
-app.listen(3001, () => {
-	console.log('Server started on port 3001...');
-}) 
+// Export our app for testing purposes
+module.exports=app;
