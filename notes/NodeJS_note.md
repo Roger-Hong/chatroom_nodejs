@@ -2,3 +2,9 @@
 * nodemon app.js: do not need to repeatedly restart server.
 * ejs: embedded JS. Standard Html & easy to use.
 * express-validator
+* [Express directory structure](https://www.freecodecamp.org/news/how-to-write-a-production-ready-node-and-express-app-f214f0b17d8c/)
+* [Express directory structure](https://www.terlici.com/2014/08/25/best-practices-express-structure.html)
+* Smaple curl post: `curl -X POST http://localhost:3001/user/register -H 'Content-Type: application/json' -d '{"username": "yijiehong", "password": "1234567"}'`
+* Sample for mocha and chai test: https://dev.to/asciidev/testing-a-nodeexpress-application-with-mocha--chai-4lho
+* Explanation of env variables: https://medium.com/the-node-js-collection/making-your-node-js-work-everywhere-with-environment-variables-2da8cdf6e786
+* Sinon for mock env: https://glebbahmutov.com/blog/mocking-process-env/

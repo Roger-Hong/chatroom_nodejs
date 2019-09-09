@@ -10,8 +10,8 @@ includes group discussion and chat history.
 - [x] Install Express.
 - [x] Implement a dialog between two users with server forwarding messages. (No DB)
 - [ ] Implement React UI to send and receive message.
-- [ ] Install MongoDB.
-- [ ] Implement an account system (login) in MongoDB and NodeJS.
+- [x] Install MongoDB.
+- [x] Implement an account system (login) in MongoDB and NodeJS.
 - [ ] Implement CRUD API and search API for friends.
 - [ ] Implement chat between friends with server forwarding messages.
 - [ ] Deploy to Google Cloud Platform without Docker and Kubernates.
