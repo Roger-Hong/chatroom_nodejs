@@ -23,7 +23,7 @@ router.post('/register', [
 	const phone = req.body.phone;
 	UserModule.register(username, password, email, phone, (err, accessToken) => {
 		if (err !== null) {
-			return res.status(500).send({ error: 'Something failed!' });
+			return res.status(500).send(err);
 		}
 		AccessTokenModule.addAccessToken(username, accessToken, () => {});
 		return res.send({accessToken: accessToken});

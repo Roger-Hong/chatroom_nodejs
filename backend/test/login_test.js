@@ -13,7 +13,6 @@ describe('To test user registeration', () => {
 	beforeEach((done) => {
 		mongoose.connect(process.env.MONGODB_PATH);
 		mongoose.connection.once('open', () => {
-			//console.log('Connected to test Mongodb for cleaning up legacy test data.');
 			mongoose.connection.dropCollection('users', (err, result) => {
 		        if (err) {
 		        	console.log("error in deleting collection, " + err);
@@ -39,6 +38,78 @@ describe('To test user registeration', () => {
 			.end((err, res) => {
 				res.should.have.status(200);
 				done();
+			});
+	});
+
+	it('Failed to register user with duplicated name', (done) => {
+		const register_detail = {
+			'username': 'testuser1',
+			'password': 'password1',
+		};
+		chai.request(app)
+			.post('/user/register')
+			.send(register_detail)
+			.end((err, res) => {
+				res.should.have.status(200);
+				chai.request(app)
+					.post('/user/register')
+					.send(register_detail)
+					.end((err, res) => {
+						res.should.have.status(500);
+						done();
+					});
+			});
+	});
+
+	it('Failed to register user with duplicated email', (done) => {
+		const register_detail1 = {
+			'username': 'testuser1',
+			'password': 'password1',
+			'email': 'email',
+		};
+		const register_detail2 = {
+			'username': 'testuser2',
+			'password': 'password2',
+			'email': 'email',
+		};
+		chai.request(app)
+			.post('/user/register')
+			.send(register_detail1)
+			.end((err, res) => {
+				res.should.have.status(200);
+				chai.request(app)
+					.post('/user/register')
+					.send(register_detail2)
+					.end((err, res) => {
+						res.should.have.status(500);
+						done();
+					});
+			});
+	});
+
+	it('Failed to register user with duplicated phone', (done) => {
+		const register_detail1 = {
+			'username': 'testuser1',
+			'password': 'password1',
+			'phone': 'phone',
+		};
+		const register_detail2 = {
+			'username': 'testuser2',
+			'password': 'password2',
+			'phone': 'phone',
+		};
+		chai.request(app)
+			.post('/user/register')
+			.send(register_detail1)
+			.end((err, res) => {
+				res.should.have.status(200);
+				chai.request(app)
+					.post('/user/register')
+					.send(register_detail2)
+					.end((err, res) => {
+						res.should.have.status(500);
+						done();
+					});
 			});
 	});
 });

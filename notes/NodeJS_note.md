@@ -8,3 +8,4 @@
 * Sample for mocha and chai test: https://dev.to/asciidev/testing-a-nodeexpress-application-with-mocha--chai-4lho
 * Explanation of env variables: https://medium.com/the-node-js-collection/making-your-node-js-work-everywhere-with-environment-variables-2da8cdf6e786
 * Sinon for mock env: https://glebbahmutov.com/blog/mocking-process-env/
+* Chained promise example: https://segmentfault.com/a/1190000015421820

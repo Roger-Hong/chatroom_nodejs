@@ -11,10 +11,11 @@ before(() => {
 
 // Restore environment variables.
 after((done) => {
+	const dbPath = process.env.MONGODB_PATH
 	sandbox.restore();
-	mongoose.connect(process.env.MONGODB_PATH);
+	mongoose.connect(dbPath);
 	mongoose.connection.once('open', () => {
-		//console.log('Connected to test Mongodb for cleaning up legacy test data.');
+		//console.log('Connected to test Mongodb for cleaning up legacy test data.')
 		mongoose.connection.dropDatabase((err, result) => {
 	        if (err) {
 	        	console.log("error in deleting test database, " + err);
