@@ -113,3 +113,99 @@ describe('To test user registeration', () => {
 			});
 	});
 });
+
+/** Test login */
+describe('To test user login', () => {
+	// Clean up test database before running each test.
+	beforeEach((done) => {
+		mongoose.connect(process.env.MONGODB_PATH);
+		mongoose.connection.once('open', () => {
+			mongoose.connection.dropCollection('users', (err, result) => {
+		        if (err) {
+		        	console.log("error in deleting collection, " + err);
+		        }
+		        done();
+			});
+		}).on('error', (error) => {
+			console.log('Connection error:', error);
+			done();
+		});
+	});
+
+	it('successfully login one user', (done) => {
+		const register_detail = {
+			'username': 'testuser1',
+			'password': 'password1',
+			'email': 'testuser1@gmail.com',
+			'phone': '1234567890',
+		};
+		const login_detail = {
+			'username': 'testuser1',
+			'password': 'password1',
+		}
+		chai.request(app)
+			.post('/user/register')
+			.send(register_detail)
+			.end((err, res) => {
+				res.should.have.status(200);
+				chai.request(app)
+					.post('/user/login')
+					.send(login_detail)
+					.end((err, res) => {
+						res.should.have.status(200);
+						done();
+					});
+			});
+	});
+
+	it('Failed to login one user, invalid request.', (done) => {
+		const register_detail = {
+			'username': 'testuser1',
+			'password': 'password1',
+			'email': 'testuser1@gmail.com',
+			'phone': '1234567890',
+		};
+		const login_detail = {
+			'username': 'testuser1',
+		}
+		chai.request(app)
+			.post('/user/register')
+			.send(register_detail)
+			.end((err, res) => {
+				res.should.have.status(200);
+				chai.request(app)
+					.post('/user/login')
+					.send(login_detail)
+					.end((err, res) => {
+						res.should.have.status(422);
+						done();
+					});
+			});
+	});
+
+	it('Failed to login one user, due to incorrect password', (done) => {
+		const register_detail = {
+			'username': 'testuser1',
+			'password': 'password1',
+			'email': 'testuser1@gmail.com',
+			'phone': '1234567890',
+		};
+		const login_detail = {
+			'username': 'testuser1',
+			'password': 'password2',
+		}
+		chai.request(app)
+			.post('/user/register')
+			.send(register_detail)
+			.end((err, res) => {
+				res.should.have.status(200);
+				chai.request(app)
+					.post('/user/login')
+					.send(login_detail)
+					.end((err, res) => {
+						res.should.have.status(401);
+						done();
+					});
+			});
+	});
+});
