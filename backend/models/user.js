@@ -9,6 +9,19 @@ const UserSchema = new Schema({
 	phone: String,
 });
 
+// Convert an object user to exposed version of user.
+const externalUser = (user) => {
+	if (!user) {
+		return {};
+	}
+	return {
+		name: user.name,
+		password: user.password,
+		email: user.email,
+		phone: user.phone
+	};
+};
+
 const UserModel = mongoose.model('user', UserSchema);
 
 // Example of chained promise.
@@ -68,5 +81,31 @@ exports.login = function(name, password, callback) {
 			return callback(null, uuidv4());
 		}
 		return callback(new Error('Invalid username or password.'), null);
+	});
+}
+
+// Search by name, email, or phone.
+exports.search = function(name, email, phone, callback) {
+	let namePromise = name ? UserModel.findOne({name: name}).exec() : Promise.resolve();
+	let emailPromise = email ? UserModel.findOne({email: email}).exec() : Promise.resolve();
+	let phonePromise = phone ? UserModel.findOne({phone: phone}).exec() : Promise.resolve();
+	Promise.all([namePromise, emailPromise, phonePromise])
+	.then(users => {
+		let nameMap = new Map();
+		let foundUsers = [];
+		for (u of users) {
+			if (!u) {
+				continue;
+			}
+			if (!nameMap.has(u.name)) {
+				foundUsers.push(u);
+				nameMap.set(u.name, true);
+			}
+		}
+		foundUsers = foundUsers.map(foundUser => externalUser(foundUser));
+		return callback(null, foundUsers);
+	})
+	.catch(err => {
+		return callback(new Error('Error in searching friend: ' + err));
 	});
 }

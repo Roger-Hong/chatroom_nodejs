@@ -9,6 +9,22 @@ before(() => {
 	sandbox.stub(process.env, 'MONGODB_PATH').value('mongodb://localhost/testchatroom');
 });
 
+// Clean up test database before running each test.
+beforeEach((done) => {
+	mongoose.connect(process.env.MONGODB_PATH);
+	mongoose.connection.once('open', () => {
+		mongoose.connection.dropCollection('users', (err, result) => {
+	        if (err) {
+	        	console.log("error in deleting collection, " + err);
+	        }
+	        done();
+		});
+	}).on('error', (error) => {
+		console.log('Connection error:', error);
+		done();
+	});
+});
+
 // Restore environment variables.
 after((done) => {
 	const dbPath = process.env.MONGODB_PATH

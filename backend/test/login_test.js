@@ -9,21 +9,6 @@ chai.use(chaiHttp);
 
 /** Test register */
 describe('To test user registeration', () => {
-	// Clean up test database before running each test.
-	beforeEach((done) => {
-		mongoose.connect(process.env.MONGODB_PATH);
-		mongoose.connection.once('open', () => {
-			mongoose.connection.dropCollection('users', (err, result) => {
-		        if (err) {
-		        	console.log("error in deleting collection, " + err);
-		        }
-		        done();
-			});
-		}).on('error', (error) => {
-			console.log('Connection error:', error);
-			done();
-		});
-	});
 
 	it('successfully registered one user', (done) => {
 		const register_detail = {
@@ -116,22 +101,6 @@ describe('To test user registeration', () => {
 
 /** Test login */
 describe('To test user login', () => {
-	// Clean up test database before running each test.
-	beforeEach((done) => {
-		mongoose.connect(process.env.MONGODB_PATH);
-		mongoose.connection.once('open', () => {
-			mongoose.connection.dropCollection('users', (err, result) => {
-		        if (err) {
-		        	console.log("error in deleting collection, " + err);
-		        }
-		        done();
-			});
-		}).on('error', (error) => {
-			console.log('Connection error:', error);
-			done();
-		});
-	});
-
 	it('successfully login one user', (done) => {
 		const register_detail = {
 			'username': 'testuser1',

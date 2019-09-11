@@ -4,10 +4,6 @@ const { check, body, validationResult } = require('express-validator');
 const UserModule = require('../models/user');
 const AccessTokenModule = require('./access_token');
 
-router.get('/r', (req, res) => {
-	return res.json({resp: 'Request received'});
-});
-
 // Parameter: username, password, email, phone
 router.post('/register', [
     check('username').isLength({ min: 3 }),
