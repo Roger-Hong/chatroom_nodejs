@@ -4,6 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../app');
 
+const expect = chai.expect;
 const should = chai.should();
 chai.use(chaiHttp);
 
@@ -22,6 +23,7 @@ describe('To test user registeration', () => {
 			.send(register_detail)
 			.end((err, res) => {
 				res.should.have.status(200);
+				expect(res.body).to.have.property('accessToken');
 				done();
 			});
 	});
@@ -36,6 +38,7 @@ describe('To test user registeration', () => {
 			.send(register_detail)
 			.end((err, res) => {
 				res.should.have.status(200);
+				expect(res.body).to.have.property('accessToken');
 				chai.request(app)
 					.post('/user/register')
 					.send(register_detail)
@@ -62,6 +65,7 @@ describe('To test user registeration', () => {
 			.send(register_detail1)
 			.end((err, res) => {
 				res.should.have.status(200);
+				expect(res.body).to.have.property('accessToken');
 				chai.request(app)
 					.post('/user/register')
 					.send(register_detail2)
@@ -88,6 +92,7 @@ describe('To test user registeration', () => {
 			.send(register_detail1)
 			.end((err, res) => {
 				res.should.have.status(200);
+				expect(res.body).to.have.property('accessToken');
 				chai.request(app)
 					.post('/user/register')
 					.send(register_detail2)
@@ -122,6 +127,7 @@ describe('To test user login', () => {
 					.send(login_detail)
 					.end((err, res) => {
 						res.should.have.status(200);
+						expect(res.body).to.have.property('accessToken');
 						done();
 					});
 			});
@@ -142,6 +148,7 @@ describe('To test user login', () => {
 			.send(register_detail)
 			.end((err, res) => {
 				res.should.have.status(200);
+				expect(res.body).to.have.property('accessToken');
 				chai.request(app)
 					.post('/user/login')
 					.send(login_detail)
@@ -168,6 +175,7 @@ describe('To test user login', () => {
 			.send(register_detail)
 			.end((err, res) => {
 				res.should.have.status(200);
+				expect(res.body).to.have.property('accessToken');
 				chai.request(app)
 					.post('/user/login')
 					.send(login_detail)

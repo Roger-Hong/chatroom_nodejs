@@ -1,16 +1,14 @@
 const mongoose = require('mongoose');
 const sinon = require('sinon');
-const sandbox = sinon.createSandbox();
+const app = require('../app');
 
-// Setup test configs.
-before(() => {
-	sandbox.stub(process.env, 'NODE_ENV').value('test');
-	sandbox.stub(process.env, 'PORT').value('3002');
-	sandbox.stub(process.env, 'MONGODB_PATH').value('mongodb://localhost/testchatroom');
+require('dotenv').config({
+	PORT: 3002,
+	MONGODB_PATH: 'mongodb://localhost/testchatroom',
 });
 
 // Clean up test database before running each test.
-beforeEach((done) => {
+afterEach((done) => {
 	mongoose.connect(process.env.MONGODB_PATH);
 	mongoose.connection.once('open', () => {
 		mongoose.connection.dropCollection('users', (err, result) => {
@@ -28,7 +26,6 @@ beforeEach((done) => {
 // Restore environment variables.
 after((done) => {
 	const dbPath = process.env.MONGODB_PATH
-	sandbox.restore();
 	mongoose.connect(dbPath);
 	mongoose.connection.once('open', () => {
 		//console.log('Connected to test Mongodb for cleaning up legacy test data.')

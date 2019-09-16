@@ -11,7 +11,7 @@ router.post('/register', [
   ], function(req, res) {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		return res.status(422).json({ errors: errors.array() });
+		return res.status(422).json({ error: errors.array() });
 	}
 	const username = req.body.username;
 	const password = req.body.password;
@@ -19,10 +19,10 @@ router.post('/register', [
 	const phone = req.body.phone;
 	UserModule.register(username, password, email, phone, (err, accessToken) => {
 		if (err !== null) {
-			return res.status(500).send(err);
+			return res.status(500).json({error: err});
 		}
 		AccessTokenModule.addAccessToken(username, accessToken, () => {});
-		return res.send({accessToken: accessToken});
+		return res.json({accessToken: accessToken});
 	});
 });
 
@@ -40,13 +40,13 @@ router.post('/login', [
 	const accessToken = req.body.accessToken;
 	AccessTokenModule.checkAccessToken(username, accessToken, (err, data) => {
 		if (err === null) {
-			return res.send({accessToken: accessToken});
+			return res.json({accessToken: accessToken});
 		}
 		UserModule.login(username, password, (err, data) => {
 			if (err === null) {
-				return res.send({accessToken: data});
+				return res.json({accessToken: data});
 			}
-			return res.status(401).send({ error: 'Unauthorized user.' });
+			return res.status(401).json({ error: 'Unauthorized user.' });
 		});
 	});
 });

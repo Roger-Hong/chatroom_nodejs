@@ -5,11 +5,11 @@ const chaiHttp = require('chai-http');
 const app = require('../app');
 
 const expect = chai.expect;
-const should = chai.should;
+const should = chai.should();
 chai.use(chaiHttp);
 
 /** Test search friends */
-describe('To test user registeration', () => {
+describe('To test searching friends', () => {
 
 	// Chai-http with promise.
 	it('successfully found one user through name', (done) => {
@@ -210,5 +210,5 @@ describe('To test user registeration', () => {
 				expect(err).to.be.null;
 				done();
 			});
-	});
+		});
 });
