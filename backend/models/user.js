@@ -55,7 +55,7 @@ exports.register = function(name, password, email, phone, callback) {
 		if (foundPhone !== 'no phone' && foundPhone !== null) {
 			throw new Error('Phone already exists. Please pick a new one.');
 		}
-		var user = new UserModel({
+		let user = new UserModel({
 			name: name,
 			password: password,
 			email: email,

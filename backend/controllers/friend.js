@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check, oneOf, validationResult } = require('express-validator');
 const UserModule = require('../models/user');
+const FriendshipModel = require('../models/friendship');
 
 // Parameter: username, email, phone
 // Figure out access token ???
@@ -24,5 +25,77 @@ router.post('/search', oneOf([
 		return res.json({users: users});
 	});
 });
+
+router.post('/invite', [
+    check('inviter').not().isEmpty(),
+    check('invitee').not().isEmpty(),
+  ], function(req, res) {
+  	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({ errors: errors.array() });
+	}
+	const inviter = req.body.inviter;
+	const invitee = req.body.invitee;
+	FriendshipModel.invite(inviter, invitee, (err, users) => {
+		if (err !== null) {
+			return res.status(500).send(err);
+		}
+		return res.json({});
+	})
+  });
+
+router.post('/accept', [
+    check('inviter').not().isEmpty(),
+    check('invitee').not().isEmpty(),
+  ], function(req, res) {
+  	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({ errors: errors.array() });
+	}
+	const inviter = req.body.inviter;
+	const invitee = req.body.invitee;
+	FriendshipModel.accept(inviter, invitee, (err, users) => {
+		if (err !== null) {
+			return res.status(500).send(err);
+		}
+		return res.json({});
+	})
+  });
+
+router.post('/reject', [
+    check('inviter').not().isEmpty(),
+    check('invitee').not().isEmpty(),
+  ], function(req, res) {
+  	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({ errors: errors.array() });
+	}
+	const inviter = req.body.inviter;
+	const invitee = req.body.invitee;
+	FriendshipModel.reject(inviter, invitee, (err, users) => {
+		if (err !== null) {
+			return res.status(500).send(err);
+		}
+		return res.json({});
+	})
+  });
+
+router.post('/delete', [
+    check('inviter').not().isEmpty(),
+    check('invitee').not().isEmpty(),
+  ], function(req, res) {
+  	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({ errors: errors.array() });
+	}
+	const inviter = req.body.inviter;
+	const invitee = req.body.invitee;
+	FriendshipModel.delete(inviter, invitee, (err, users) => {
+		if (err !== null) {
+			return res.status(500).send(err);
+		}
+		return res.json({});
+	})
+  });
 
 module.exports = router
