@@ -12,7 +12,7 @@ includes group discussion and chat history.
 - [ ] Implement React UI to send and receive message.
 - [x] Install MongoDB.
 - [x] Implement an account system (login) in MongoDB and NodeJS.
-- [ ] Implement CRUD API and search API for friends.
+- [x] Implement CRUD API and search API for friends.
 - [ ] Implement chat between friends with server forwarding messages.
 - [ ] Deploy to Google Cloud Platform without Docker and Kubernates.
 - [ ] Integrate with Docker.
