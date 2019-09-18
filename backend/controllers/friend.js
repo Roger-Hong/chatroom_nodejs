@@ -36,7 +36,7 @@ router.post('/invite', [
 	}
 	const inviter = req.body.inviter;
 	const invitee = req.body.invitee;
-	FriendshipModel.invite(inviter, invitee, (err, users) => {
+	FriendshipModel.invite(inviter, invitee, (err, value) => {
 		if (err !== null) {
 			return res.status(500).send(err);
 		}
@@ -54,7 +54,7 @@ router.post('/accept', [
 	}
 	const inviter = req.body.inviter;
 	const invitee = req.body.invitee;
-	FriendshipModel.accept(inviter, invitee, (err, users) => {
+	FriendshipModel.accept(inviter, invitee, (err, value) => {
 		if (err !== null) {
 			return res.status(500).send(err);
 		}
@@ -72,7 +72,7 @@ router.post('/reject', [
 	}
 	const inviter = req.body.inviter;
 	const invitee = req.body.invitee;
-	FriendshipModel.reject(inviter, invitee, (err, users) => {
+	FriendshipModel.reject(inviter, invitee, (err, value) => {
 		if (err !== null) {
 			return res.status(500).send(err);
 		}
@@ -90,11 +90,29 @@ router.post('/delete', [
 	}
 	const inviter = req.body.inviter;
 	const invitee = req.body.invitee;
-	FriendshipModel.delete(inviter, invitee, (err, users) => {
+	FriendshipModel.delete(inviter, invitee, (err, value) => {
 		if (err !== null) {
 			return res.status(500).send(err);
 		}
 		return res.json({});
+	})
+  });
+
+router.post('/isFriend', [
+    check('user1').not().isEmpty(),
+    check('user2').not().isEmpty(),
+  ], function(req, res) {
+  	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({ errors: errors.array() });
+	}
+	const user1 = req.body.user1;
+	const user2 = req.body.user2;
+	FriendshipModel.isFriend(user1, user2, (err, value) => {
+		if (err !== null) {
+			return res.status(500).send(err);
+		}
+		return res.json({isFriend: value});
 	})
   });
 

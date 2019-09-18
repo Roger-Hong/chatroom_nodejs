@@ -15,6 +15,9 @@ const FriendshipSchema = new Schema({
 
 const FriendshipModel = mongoose.model('friendship', FriendshipSchema);
 
+exports.db = FriendshipModel;
+exports.friendshipStatus = FriendshipStatus;
+
 const checkStatusAndUpdate = (inviter, invitee, currentStatus, newStatus) => {
 	switch (currentStatus) {
 		case FriendshipStatus.PENDING:
@@ -68,7 +71,7 @@ exports.accept = function(inviter, invitee, callback) {
 		if (!result) {
 			throw new Error('Invitation not found.');
 		}
-		return checkStatusAndUpdate(inviter, invitee, result.status, newStatus);
+		return checkStatusAndUpdate(inviter, invitee, result.status, FriendshipStatus.ACCEPTED);
 	})
 	.catch(err => {
 		throw new Error(`Error in accepting invitation: ${err}`);
@@ -91,10 +94,23 @@ exports.accept = function(inviter, invitee, callback) {
 }
 
 exports.reject = function(inviter, invitee, callback) {
-	FriendshipModel.findOneAndRemove({
-		inviterName: invitee,
-		inviteeName: inviter
+	FriendshipModel.findOne({
+		inviterName: inviter,
+		inviteeName: invitee,
+		status: FriendshipStatus.PENDING
 	}).exec()
+	.then(result => {
+		if (!result) {
+			throw new Error("Pending invitation not found.");
+		}
+		return FriendshipModel.findOneAndRemove({
+			inviterName: inviter,
+			inviteeName: invitee
+		}).exec()
+	})
+	.catch(err => {
+		throw new Error(`Error in searching friendship: ${err}`);
+	})
 	.then(result => {
 		return callback(null, null);
 	})
