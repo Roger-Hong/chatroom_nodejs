@@ -15,7 +15,7 @@ const FriendshipSchema = new Schema({
 
 const FriendshipModel = mongoose.model('friendship', FriendshipSchema);
 
-exports.db = FriendshipModel;
+exports.friendshipmodel = FriendshipModel;
 exports.friendshipStatus = FriendshipStatus;
 
 const checkStatusAndUpdate = (inviter, invitee, currentStatus, newStatus) => {

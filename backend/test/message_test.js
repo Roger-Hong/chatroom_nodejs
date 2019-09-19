@@ -1,0 +1,96 @@
+const assert = require('assert')
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const app = require('../app');
+const messageCache = require('../models/message');
+
+const expect = chai.expect;
+const should = chai.should();
+chai.use(chaiHttp);
+
+/** Test send message */
+describe('To test send messages', () => {
+
+	it('successfully send four messages.', (done) => {
+		chai.request(app)
+			.post('/message/send')
+			.send({
+				sender: "user1",
+				receiver: "user2",
+				message: "First message"
+			})
+			.then(res => {
+				expect(res).to.have.status(200);
+				return chai.request(app)
+				.post('/message/send')
+				.send({
+					sender: "user1",
+					receiver: "user3",
+					message: "Second message"
+				})
+			})
+			.catch(err => {
+				throw err;
+			})
+			.then(res => {
+				expect(res).to.have.status(200);
+				return chai.request(app)
+				.post('/message/send')
+				.send({
+					sender: "user1",
+					receiver: "user2",
+					message: "Third message"
+				})
+			})
+			.catch(err => {
+				throw err;
+			})
+			.then(res => {
+				expect(res).to.have.status(200);
+				return chai.request(app)
+				.post('/message/send')
+				.send({
+					sender: "user2",
+					receiver: "user3",
+					message: "Fourth message"
+				})
+			})
+			.catch(err => {
+				throw err;
+			})
+			.then(res => {
+				expect(res).to.have.status(200);
+
+				const receivers = new Map();
+				
+				delete messageCache.receiversMapForTest.get("user2").get("user1")[0].timestamp;
+				receivers.set("user2", new Map());
+				receivers.get("user2").set("user1", [{
+					message: "First message"
+				}]);
+				
+				delete messageCache.receiversMapForTest.get("user3").get("user1")[0].timestamp;
+				receivers.set("user3", new Map());
+				receivers.get("user3").set("user1", [{
+					message: "Second message"
+				}]);
+				
+				delete messageCache.receiversMapForTest.get("user2").get("user1")[1].timestamp;
+				receivers.get("user2").get("user1").push({
+					message: "Third message"
+				});
+				
+				delete messageCache.receiversMapForTest.get("user3").get("user2")[0].timestamp;
+				receivers.get("user3").set("user2", [{
+					message: "Fourth message"
+				}]);
+
+				messageCache.receiversMapForTest.should.be.eql(receivers);
+				done();
+			})
+			.catch(err => {
+				expect(err).to.be.null;
+				done();
+			});
+	});
+});

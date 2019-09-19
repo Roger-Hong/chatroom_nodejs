@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check, body, validationResult } = require('express-validator');
 const UserModule = require('../models/user');
-const AccessTokenModule = require('./access_token');
+const AccessTokenModule = require('../models/access_token');
 
 // Parameter: username, password, email, phone
 router.post('/register', [

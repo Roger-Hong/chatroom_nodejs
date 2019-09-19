@@ -223,7 +223,7 @@ describe('To test invite friends', () => {
 			.send({inviter: "user1", invitee: "user2"})
 			.then(result => {
 				expect(result).to.have.status(200);
-				return FriendshipModel.db.findOne({
+				return FriendshipModel.friendshipmodel.findOne({
 					inviterName: "user1",
 					inviteeName: "user2"
 				}).exec()
@@ -258,7 +258,7 @@ describe('To test invite friends', () => {
 			})
 			.then(result => {
 				expect(result).to.have.status(200);
-				return FriendshipModel.db.findOne({
+				return FriendshipModel.friendshipmodel.findOne({
 					inviterName: "user1",
 					inviteeName: "user2"
 				}).exec()
@@ -279,7 +279,7 @@ describe('To test invite friends', () => {
 	});
 
 	it('failed to invite an accepted user.', (done) => {
-		let friendship = new FriendshipModel.db({
+		let friendship = new FriendshipModel.friendshipmodel({
 			inviterName: "user1",
 			inviteeName: "user2",
 			status: FriendshipModel.friendshipStatus.ACCEPTED,
@@ -308,13 +308,13 @@ describe('To test invite friends', () => {
 /** Test accept invitation */
 describe('To test accept invitation', () => {
 	it('successfully accepted an invitation', (done) => {
-		let friendship1 = new FriendshipModel.db({
+		let friendship1 = new FriendshipModel.friendshipmodel({
 			inviterName: "user1",
 			inviteeName: "user2",
 			status: FriendshipModel.friendshipStatus.PENDING,
 			timestamp: Date.now()
 		})
-		let friendship2 = new FriendshipModel.db({
+		let friendship2 = new FriendshipModel.friendshipmodel({
 			inviterName: "user2",
 			inviteeName: "user1",
 			status: FriendshipModel.friendshipStatus.PENDING,
@@ -337,7 +337,7 @@ describe('To test accept invitation', () => {
 		})
 		.then(res => {
 			expect(res).to.have.status(200);
-			return FriendshipModel.db.findOne({
+			return FriendshipModel.friendshipmodel.findOne({
 				inviterName: "user2",
 				inviteeName: "user1"
 			}).exec()
@@ -347,7 +347,7 @@ describe('To test accept invitation', () => {
 		})
 		.then(res => {
 			expect(res).to.not.be.ok;
-			return FriendshipModel.db.findOne({
+			return FriendshipModel.friendshipmodel.findOne({
 				inviterName: "user1",
 				inviteeName: "user2"
 			}).exec()
@@ -368,7 +368,7 @@ describe('To test accept invitation', () => {
 	});
 
 	it('failed to accepted an accepted invitation', (done) => {
-		let friendship = new FriendshipModel.db({
+		let friendship = new FriendshipModel.friendshipmodel({
 			inviterName: "user1",
 			inviteeName: "user2",
 			status: FriendshipModel.friendshipStatus.ACCEPTED,
@@ -385,7 +385,7 @@ describe('To test accept invitation', () => {
 		})
 		.then(res => {
 			res.should.have.status(500);
-			return FriendshipModel.db.findOne({
+			return FriendshipModel.friendshipmodel.findOne({
 				inviterName: "user1",
 				inviteeName: "user2"
 			}).exec()
@@ -409,7 +409,7 @@ describe('To test accept invitation', () => {
 /** Test reject invitation. */
 describe('To test reject invitation', () => {
 	it('successfully rejected an invitation', (done) => {
-		let friendship = new FriendshipModel.db({
+		let friendship = new FriendshipModel.friendshipmodel({
 			inviterName: "user1",
 			inviteeName: "user2",
 			status: FriendshipModel.friendshipStatus.PENDING,
@@ -426,7 +426,7 @@ describe('To test reject invitation', () => {
 		})
 		.then(res => {
 			res.should.have.status(200);
-			return FriendshipModel.db.findOne({
+			return FriendshipModel.friendshipmodel.findOne({
 				inviterName: "user1",
 				inviteeName: "user2"
 			}).exec()
@@ -462,13 +462,13 @@ describe('To test reject invitation', () => {
 /** Test isFriend(). */
 describe('To test the judgement if two users are friends', () => {
 	it('successfully found friendship', (done) => {
-		let friendship1 = new FriendshipModel.db({
+		let friendship1 = new FriendshipModel.friendshipmodel({
 			inviterName: "user1",
 			inviteeName: "user2",
 			status: FriendshipModel.friendshipStatus.PENDING,
 			timestamp: Date.now()
 		})
-		let friendship2 = new FriendshipModel.db({
+		let friendship2 = new FriendshipModel.friendshipmodel({
 			inviterName: "user2",
 			inviteeName: "user1",
 			status: FriendshipModel.friendshipStatus.ACCEPTED,
@@ -501,7 +501,7 @@ describe('To test the judgement if two users are friends', () => {
 	});
 
 	it('successfully not found friendship', (done) => {
-		let friendship1 = new FriendshipModel.db({
+		let friendship1 = new FriendshipModel.friendshipmodel({
 			inviterName: "user1",
 			inviteeName: "user2",
 			status: FriendshipModel.friendshipStatus.PENDING,
@@ -531,13 +531,13 @@ describe('To test the judgement if two users are friends', () => {
 /** Test delete invitation. */
 describe('To test reject invitation', () => {
 	it('successfully deleted one invitations', (done) => {
-		let friendship1 = new FriendshipModel.db({
+		let friendship1 = new FriendshipModel.friendshipmodel({
 			inviterName: "user1",
 			inviteeName: "user2",
 			status: FriendshipModel.friendshipStatus.PENDING,
 			timestamp: Date.now()
 		})
-		let friendship2 = new FriendshipModel.db({
+		let friendship2 = new FriendshipModel.friendshipmodel({
 			inviterName: "user2",
 			inviteeName: "user1",
 			status: FriendshipModel.friendshipStatus.ACCEPTED,
@@ -560,7 +560,7 @@ describe('To test reject invitation', () => {
 		})
 		.then(res => {
 			res.should.have.status(200);
-			return FriendshipModel.db.findOne({
+			return FriendshipModel.friendshipmodel.findOne({
 				inviterName: "user2",
 				inviteeName: "user1"
 			}).exec()
@@ -570,7 +570,7 @@ describe('To test reject invitation', () => {
 		})
 		.then(res => {
 			expect(res).to.not.be.ok;
-			return FriendshipModel.db.findOne({
+			return FriendshipModel.friendshipmodel.findOne({
 				inviterName: "user1",
 				inviteeName: "user2"
 			}).exec()

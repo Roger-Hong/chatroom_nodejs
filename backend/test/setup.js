@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const sinon = require('sinon');
 const app = require('../app');
 
 require('dotenv').config({
