@@ -11,3 +11,4 @@
 * Chained promise example: https://segmentfault.com/a/1190000015421820
 * Lock - mutex: https://www.npmjs.com/package/locks
 * Chai-http: https://www.chaijs.com/plugins/chai-http/
+* Redis general instruction: https://zhuanlan.zhihu.com/p/37982685
