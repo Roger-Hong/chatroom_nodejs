@@ -63,29 +63,129 @@ describe('To test send messages', () => {
 
 				const receivers = new Map();
 				
-				delete messageCache.receiversMapForTest.get("user2").get("user1")[0].timestamp;
+				delete messageCache.getReceiversMapForTest().get("user2").get("user1")[0].timestamp;
 				receivers.set("user2", new Map());
 				receivers.get("user2").set("user1", [{
 					message: "First message"
 				}]);
 				
-				delete messageCache.receiversMapForTest.get("user3").get("user1")[0].timestamp;
+				delete messageCache.getReceiversMapForTest().get("user3").get("user1")[0].timestamp;
 				receivers.set("user3", new Map());
 				receivers.get("user3").set("user1", [{
 					message: "Second message"
 				}]);
 				
-				delete messageCache.receiversMapForTest.get("user2").get("user1")[1].timestamp;
+				delete messageCache.getReceiversMapForTest().get("user2").get("user1")[1].timestamp;
 				receivers.get("user2").get("user1").push({
 					message: "Third message"
 				});
 				
-				delete messageCache.receiversMapForTest.get("user3").get("user2")[0].timestamp;
+				delete messageCache.getReceiversMapForTest().get("user3").get("user2")[0].timestamp;
 				receivers.get("user3").set("user2", [{
 					message: "Fourth message"
 				}]);
 
-				messageCache.receiversMapForTest.should.be.eql(receivers);
+				messageCache.getReceiversMapForTest().should.be.eql(receivers);
+				done();
+			})
+			.catch(err => {
+				expect(err).to.be.null;
+				done();
+			});
+	});
+});
+
+/** Test read message */
+describe('To test read messages', () => {
+
+	it('successfully read messages.', (done) => {
+		const receivers = new Map();
+
+		receivers.set("user2", new Map());
+		receivers.get("user2").set("user1", [{
+			message: "First message",
+			timestamp: 1
+		},
+		{
+			message: "Second message",
+			timestamp: 2
+		}]);
+		receivers.get("user2").set("user3", [{
+			message: "Third message",
+			timestamp: 3
+		}]);
+		receivers.set("user1", new Map());
+		receivers.get("user1").set("user3", [{
+			message: "Third message",
+			timestamp: 4
+		}]);
+		messageCache.setReceiversMapForTest(receivers);
+		chai.request(app)
+			.post('/message/read')
+			.send({
+				sender: "user1",
+				receiver: "user2"
+			})
+			.then(res => {
+				expect(res).to.have.status(200);
+				const expectedReceivers = new Map();
+
+				expectedReceivers.set("user2", new Map());
+				expectedReceivers.get("user2").set("user1", []);
+				expectedReceivers.get("user2").set("user3", [{
+					message: "Third message",
+					timestamp: 3
+				}]);
+				expectedReceivers.set("user1", new Map());
+				expectedReceivers.get("user1").set("user3", [{
+					message: "Third message",
+					timestamp: 4
+				}]);
+				res.body.should.be.eql({ messages: [
+					{ message: 'First message', timestamp: 1 },
+					{ message: 'Second message', timestamp: 2 }
+				]});
+				messageCache.getReceiversMapForTest().should.be.eql(expectedReceivers);
+				done();
+			})
+			.catch(err => {
+				expect(err).to.be.null;
+				done();
+			});
+	});
+});
+
+/** Test message notifications. */
+describe('To test messages notifications.', () => {
+
+	it('successfully received message notifications.', (done) => {
+		const receivers = new Map();
+
+		receivers.set("user2", new Map());
+		receivers.get("user2").set("user1", [{
+			message: "First message",
+			timestamp: 1
+		},
+		{
+			message: "Second message",
+			timestamp: 2
+		}]);
+		receivers.get("user2").set("user3", [{
+			message: "Third message",
+			timestamp: 3
+		}]);
+		receivers.set("user1", new Map());
+		receivers.get("user1").set("user3", [{
+			message: "Third message",
+			timestamp: 4
+		}]);
+		messageCache.setReceiversMapForTest(receivers);
+		chai.request(app)
+			.post('/message/getNotification')
+			.send({	receiver: "user2" })
+			.then(res => {
+				expect(res).to.have.status(200);
+				res.body.should.be.eql({ notifications: {user1: 2, user3: 1} });
 				done();
 			})
 			.catch(err => {

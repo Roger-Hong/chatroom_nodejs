@@ -28,7 +28,7 @@ router.post('/read', [
 	if (!errors.isEmpty()) {
 		return res.status(422).json({ error: errors.array() });
 	}
-	MessageCache.send(req.body.sender, req.body.receiver, (err, value) => {
+	MessageCache.read(req.body.sender, req.body.receiver, (err, value) => {
 		if (err !== null) {
 			return res.status(500).json({error: err});
 		}
@@ -36,7 +36,7 @@ router.post('/read', [
 	});
 });
 
-router.post('/messagesNotification', [
+router.post('/getNotification', [
     check('receiver').not().isEmpty()
   ], function(req, res) {
 	const errors = validationResult(req);
@@ -44,11 +44,11 @@ router.post('/messagesNotification', [
 		return res.status(422).json({ error: errors.array() });
 	}
 	// Returns a map sender => # of messages
-	MessageCache.messagesNotification(req.body.receiver, (err, value) => {
+	MessageCache.getNotification(req.body.receiver, (err, value) => {
 		if (err !== null) {
 			return res.status(500).json({error: err});
 		}
-		return res.json({messages: value});
+		return res.json({notifications: value});
 	});
 });
 

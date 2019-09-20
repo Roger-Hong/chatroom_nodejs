@@ -2,7 +2,7 @@
 const locks = require('locks');
 
 // receiver => {sender => [messages]}
-const receivers = new Map();
+let receivers = new Map();
 const receiverMutexes = new Map();
 
 const getMutex = (username) => {
@@ -12,7 +12,10 @@ const getMutex = (username) => {
 	return receiverMutexes.get(username);
 }
 
-exports.receiversMapForTest = receivers;
+exports.setReceiversMapForTest = (rs) => {
+	receivers = rs
+};
+exports.getReceiversMapForTest = () => receivers;
 
 exports.send = function(sender, receiver, message, callback) {
 	const mutex = getMutex(receiver);
@@ -46,15 +49,15 @@ exports.read = function(sender, receiver, callback) {
 }
 
 // Return a map sender => # of messages
-exports.messagesNotification = function(receiver, callback) {
+exports.getNotification = function(receiver, callback) {
 	const mutex = getMutex(receiver);
-	const numOfMessages = new Map();
+	const numOfMessages = {};
 	mutex.readLock(() => {
 		if (!receivers.has(receiver)) {
 			return;
 		}
 		for (let [sender, messages] of receivers.get(receiver)) {
-			numOfMessages.set(sender, messages.length);
+			numOfMessages[sender] = messages.length;
 		}
 		mutex.unlock();
 	});
