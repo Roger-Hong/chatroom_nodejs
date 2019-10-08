@@ -15,3 +15,5 @@
 * Docker
 	* Create local mongo container: `docker run --name ChatroomMongodb -p 27019:27017 -v /tmp/db:/data/db -d mongo`
 	* Create local mongo-express: `docker run -it --rm -p 8082:8081 --link <mongoDB container ID>:mongo mongo-express`
+	* `docker build - < Dockerfile`
+	* `docker-compose -f <yml file> up/down -d`
