@@ -1,6 +1,6 @@
 FROM node:12.10.0-alpine
 
-EXPOSE 9876
+EXPOSE 3001
 
 RUN mkdir /tmp/docker_backend
 
