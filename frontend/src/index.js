@@ -2,12 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
 import rootReducer from './reducers'
-import App from './components/App'
+import App from './App'
 import * as serviceWorker from './serviceWorker';
+import { deepOrange, deepPurple } from '@material-ui/core/colors';
 
-const store = createStore(rootReducer)
+const initialState = {};
+
+const store = createStore(rootReducer, initialState, applyMiddleware(thunk));
 
 ReactDOM.render(
 	<Provider store={store}>

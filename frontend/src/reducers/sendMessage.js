@@ -1,14 +1,14 @@
 import { actionTypeNames } from '../actions'
 
 const sendMessage = (state = {}, action) => {
-	if (action.type != actionTypeNames.SEND_MESSAGE) {
+	if (action.type !== actionTypeNames.SEND_MESSAGE) {
 		return state;
 	}
 	if (!state.hasOwnProperty(action.friendName)) {
 		return state;
 	}
 	const newState = Object.assign(
-		{}, state, {currentDialogName: action.friendName});
+		{}, state, {CURRENT_FRIEND: action.friendName});
 	newState[action.friendName]["messages"].push(
 		newState[action.friendName]["unsentMessage"]);
 	newState[action.friendName]["unsentMessage"] = "";
@@ -16,4 +16,4 @@ const sendMessage = (state = {}, action) => {
 	return newState;
 };
 
-export default checkDialog;;
+export default sendMessage;

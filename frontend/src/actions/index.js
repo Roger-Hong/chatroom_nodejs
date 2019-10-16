@@ -1,8 +1,10 @@
 /**
  * The format of redux state:
  *     {
- *         @current@: String, 
+ *         MY_NAME: String,
+ *         CURRENT_FRIEND: String, 
  *         friendName1: {
+ *             avatarColor: String,
  *             messages: [{
  *                 text: String,
  *                 isMine: Boolean,
@@ -12,6 +14,7 @@
  *             unsentMessage: String,
  *             lastUpdateTimestamp: Number,
  *         },
+ *         usedColors: [String],
  *     }
  */
 
