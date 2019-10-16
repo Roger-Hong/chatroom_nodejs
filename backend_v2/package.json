@@ -1,0 +1,14 @@
+{
+  "name": "chatroom_backend_v2",
+  "version": "2.0.0",
+  "description": "Second version of chatroom backend service.",
+  "main": "app.js",
+  "scripts": {
+    "test": "nocha"
+  },
+  "author": "Roger-Hong",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
