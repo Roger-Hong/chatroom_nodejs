@@ -10,23 +10,24 @@
 
 | Api | Request.Body <br> (...token) | Response | Model dependency |
 | --- | --- | --- | --- |
-| Register() | username <br> password <br> email <br> phone | token | User (create) |
-| Login() | username <br> password | token | User (get) |
-| SearchFriend() | name/email/phone | friendName | User (get) |
-| ListMyFriends() | username | [{ friendName, lastUpdateTimestamp }] | Friend (list) <br> Msg (get) |
-| Invite() | username <br> friendName | - | Friend (create) |
-| Accept() | username <br> friendName | - | Friend (update) |
-| RemoveFriend() | username <br> friendName | - | Friend (delete) |
-| CheckUnreadMsg() | username | [{ friendName, unread#, lastUpdateTimestamp }] | Msg cache (get) |
-| ReadDialog() | username <br> friendName | [message] | Msg (get) |
-| SendMsg() | username <br> friendName <br> text | - | Msg (update) |
+| Register() | username <br> password <br> email <br> phone | {token, uuid} | User(create) <br> Token(create) |
+| Login() | username <br> password | {token, uuid} | User(get) <br> Token(create) |
+| SearchFriend() | name/email/phone | {friendName, frindUuid} | User(get) |
+| ListMyFriends() | userUuid | [{ friendName, friendUuid, lastUpdateTimestamp }] | Friend(list) <br> Msg(get) |
+| Invite() | userUuid <br> friendUuid | - | Friend(create) |
+| Accept() | userUuid <br> friendUuid | - | Friend(update) |
+| RemoveFriend() | userUuid <br> friendUuid | - | Friend(delete) |
+| CheckUpdates() | userUuid | [{ friendName, unread#/newStatus, lastUpdateTimestamp }] | Msg cache (get) |
+| ReadDialog() | userUuid <br> friendUuid | [message] | Msg (get) |
+| SendMsg() | userUuid <br> friendUuid <br> text | - | Msg (update) |
 
-### Schema
+### Storage Schema
 
 ##### User
 
 ```
 const UserSchema = new Schema({
+	uuid: String,
 	name: String,
 	password: String,
 	email: String,
@@ -37,7 +38,7 @@ const UserSchema = new Schema({
 ##### AccessToken (cache)
 
 ```
-username => {
+Map: userUuid => {
 	token: String,
 	expireTimestamp: Number
 }
@@ -49,26 +50,36 @@ username => {
 const MessageSchema = new Schema({
 	text: String,
 	timestamp: Number,
-	read: Boolean,
+	isRead: Boolean,
 });
 const FriendshipStatus = {
 	PENDING: "pending",
 	ACCEPTED: "accepted",
+	DELETED: "deleted",
 }
 const FriendSchema = new Schema({
-	inviterName: string,
-	inviteeName: string,
+	inviterId: string,
+	inviteeId: string,
 	status: String,
 	timestamp: Number,
 	messages: [MessageSchema],
 });
 ```
 
-##### Message cache
+##### UnreadMessage cache
 
 ```
-username => friendName => {
+Map: userUuid => friendUuid => {
 	unreadNum: Number,
+	lastUpdateTimestamp: Number,
+}
+```
+
+##### FriendshipChange
+
+```
+Map: userUuid => friendUuid => {
+	newStatus: String,
 	lastUpdateTimestamp: Number,
 }
 ```
