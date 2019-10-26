@@ -4,13 +4,18 @@
   "description": "Second version of chatroom backend service.",
   "main": "app.js",
   "scripts": {
-    "test": "nocha"
+    "test": "mocha"
   },
   "author": "Roger-Hong",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.7.5"
+    "mocha": "^6.2.2",
+    "mongoose": "^5.7.5",
+    "power-assert": "^1.6.1",
+    "uuid": "^3.3.3"
   }
 }

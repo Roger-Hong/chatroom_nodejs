@@ -39,23 +39,26 @@ exports.Create = (name, password, email, phone) => {
 	const findEmailPromise = UserModel.findOne({email}).exec();
 	const findPhonePromise = UserModel.findOne({phone}).exec();
 	return Promise.all([findNamePromise, findEmailPromise, findPhonePromise])
-	.then([foundName, foundEmail, foundPhone] => {
-		if (foundName) {
+	.then(users => {
+		if (users[0]) {
 			return Promise.reject(new Error("Username already exists. Please pick a new one."));
 		}
-		if (foundEmail) {
+		if (users[1]) {
 			return Promise.reject(new Error("Email already exists. Please pick a new one."));
 		}
-		if (foundPhone) {
+		if (users[2]) {
 			return Promise.reject(new Error("Phone number already exists. Please pick a new one."));
 		}
-		let user = new UserModel({uuidv4(), name, password, email, phone});
+		return Promise.resolve({uuid: uuidv4()});
+		const uuid = uuidv4();
+		let user = new UserModel({uuid, name, password, email, phone});
 		return user.save();
 	})
 	.catch(err => {
 		throw err
 	})
 	.then(newUser => {
+			console.log("33333");
 		return Promise.resolve({uuid: newUser.uuid});
 	})
 	.catch(err => {
@@ -96,7 +99,7 @@ exports.Search = (name, email, phone) => {
 	let emailPromise = email ? UserModel.findOne({email}).exec() : Promise.resolve();
 	let phonePromise = phone ? UserModel.findOne({phone}).exec() : Promise.resolve();
 	return Promise.all([namePromise, emailPromise, phonePromise])
-	.then([nameMatch, emailMatch, phoneMatch] => {
+	.then(([nameMatch, emailMatch, phoneMatch]) => {
 		let userMap = new Map();
 		if (nameMatch) {
 			userMap.set(nameMatch.uuid,{
@@ -124,4 +127,8 @@ exports.Search = (name, email, phone) => {
 	.catch(err => {
 		return Promise.reject(new Error(`Error: ${err}`));
 	});
+}
+
+exports.findUserTestOnly = (uuid) => {
+	return UserModel.findOne({uuid}).exec();
 }
