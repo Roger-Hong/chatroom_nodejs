@@ -17,7 +17,7 @@
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
     "locks": "^0.2.2",
-    "mocha": "^6.2.0",
+    "mocha": "^10.2.0",
     "mongoose": "^5.6.12",
     "package.json": "^2.0.1",
     "redis": "^2.8.0",
